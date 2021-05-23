@@ -11,7 +11,7 @@ class space_time(Scene):
         s_prime.set_color(GREEN)
         s_prime.axes[0:2].set_color(WHITE)
         s_prime.generate_target()
-        s_prime.target.apply_matrix([[math.cos(math.atan(0.6)),math.sin(math.atan(0.6))],[math.sin(math.atan(0.6)),math.cos(math.atan(0.6))]])
+        s_prime.target.apply_matrix([[math.cos(math.atan(0.5)),math.sin(math.atan(0.5))],[math.sin(math.atan(0.5)),math.cos(math.atan(0.5))]])
         
         self.play(Create(s))
         self.add(s_prime)
@@ -24,19 +24,27 @@ class space_time(Scene):
 
         beta.add_updater(lambda x: x.set_value(tracker.get_value()))
 
-        
- 
-        s_prime.add_updater(lambda x: x.become(s_prime.apply_matrix([[math.cos(math.atan(tracker.get_value()) * DEGREES),math.sin(math.atan(tracker.get_value()) * DEGREES)],[math.sin(math.atan(tracker.get_value()) * DEGREES),math.cos(math.atan(tracker.get_value()) * DEGREES)]])))
+
+
+
+        def s_prime_updater(obj):
+
+            s_prime_2 = NumberPlane(x_range = [-100,100],y_range = [-100,100])
+            s_prime_2.set_color(GREEN)
+            s_prime_2.axes[0:2].set_color(WHITE)
+            obj.become(s_prime_2.apply_matrix([[math.cos(math.atan(tracker.get_value())),math.sin(math.atan(tracker.get_value()))],[math.sin(math.atan(tracker.get_value())),math.cos(math.atan(tracker.get_value()))]]))
+             
+        s_prime.add_updater(s_prime_updater)
 
         self.add(s_prime,beta,text)
 
-        self.play(tracker.animate.set_value(0.95),rate_func = linear,run_time = 6)
-        print(tracker.get_value())
+        self.play(tracker.animate.set_value(0.9),rate_func = linear,run_time = 6)
+        
         self.wait(1)
 
         
-        s_prime.clear_updaters()
-        self.play(Transform(s_prime,s_prime.target),tracker.animate.set_value(0.6),rate_func = linear, run_time = 4)
+        
+        self.play(tracker.animate.set_value(0.5),rate_func = linear, run_time = 4)
         self.wait(2)
 
         
